@@ -1,0 +1,10 @@
+{
+  "name":"auditos-sire-sms-gap-analysis",
+  "private":true,
+  "type":"module",
+  "scripts":{
+    "test":"node --test auditos/tests/*.test.mjs",
+    "verify":"node --test auditos/tests/*.test.mjs && node --check auditos/app.js && node --check auditos/browser/parsers.js && node --check auditos/core/excel-schema.js && node --check auditos/core/mapper.js && node --check auditos/core/export.js",
+    "build":"node auditos/build.mjs"
+  }
+}
