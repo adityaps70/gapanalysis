@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#071722">
+  <title>AuditOS — SIRE ↔ SMS Gap Analysis</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="brand-mark">A</div><div><strong>AuditOS</strong><span>SIRE ↔ SMS Gap Analysis</span></div></div>
+  <div class="guardrail"><b>AI suggests. Auditor decides.</b><span>Document coverage only — not a compliance conclusion.</span></div>
+  <button id="clearAnalysis" class="button button-ghost">Clear Analysis</button>
+</header>
+<main class="shell">
+  <section class="hero">
+    <div><p class="eyebrow">MARITIME AUDITOR INTELLIGENCE</p><h1>Upload the SMS. Upload SIRE. <em>Find what is not clearly covered.</em></h1><p class="lede">AuditOS reads your company SMS PDF page-by-page, detects the structure of your SIRE Excel workbook, and maps each SIRE item to the most relevant SMS clauses with page-level traceability.</p></div>
+    <aside class="privacy-card"><span>PRIVATE WORKING MODE</span><b>Your source files stay in this browser.</b><small>The deterministic analysis does not upload your SMS or SIRE workbook to Vercel storage.</small></aside>
+  </section>
+  <section id="uploadWorkspace" class="upload-grid">
+    <article class="upload-card" id="smsCard"><div class="step-number">1</div><div class="upload-copy"><p class="eyebrow">COMPANY CONTROL SOURCE</p><h2>Upload Company SMS PDF</h2><p>Use a text-based or OCR-enabled PDF. AuditOS preserves the original PDF page number for every match.</p></div><label class="dropzone" for="smsFile"><input id="smsFile" type="file" accept="application/pdf,.pdf"><span class="drop-icon">PDF</span><b>Choose SMS PDF</b><small>Company manual / SMS / procedure</small></label><div class="file-status" id="smsStatus"><span class="status-dot idle"></span><div><b>Waiting for SMS PDF</b><small>No file selected</small></div></div><div class="progress hidden" id="smsProgress"><div id="smsProgressBar"></div></div></article>
+    <article class="upload-card" id="sireCard"><div class="step-number">2</div><div class="upload-copy"><p class="eyebrow">INSPECTION SOURCE</p><h2>Upload SIRE Excel</h2><p>AuditOS detects sheets, headers, question IDs, requirement text, guidance, rank, applicability and related fields.</p></div><label class="dropzone" for="sireFile"><input id="sireFile" type="file" accept=".xlsx,.xls,.xlsm,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"><span class="drop-icon excel">XLS</span><b>Choose SIRE Excel</b><small>.xlsx / .xls workbook</small></label><div class="file-status" id="sireStatus"><span class="status-dot idle"></span><div><b>Waiting for SIRE Excel</b><small>No file selected</small></div></div></article>
+    <article class="run-card"><p class="eyebrow">ANALYSIS</p><h2>Run SIRE ↔ SMS Gap Analysis</h2><div class="run-check"><span>01</span><p><b>Parse sources</b><small>PDF pages + workbook rows</small></p></div><div class="run-check"><span>02</span><p><b>Map requirements</b><small>SIRE item → SMS pages</small></p></div><div class="run-check"><span>03</span><p><b>Prioritise review</b><small>Possible gaps first</small></p></div><button id="runAnalysis" class="button button-primary" disabled>Run Gap Analysis</button><p class="microcopy">“No Relevant Control Located” means AuditOS could not locate a clear control in the uploaded SMS. It does not mean the vessel or company is non-compliant.</p></article>
+  </section>
+  <section id="columnMapping" class="mapping-panel hidden" aria-live="polite"><div class="section-head"><div><p class="eyebrow">EXCEL STRUCTURE</p><h2>Detected SIRE workbook structure</h2><p>Review only if AuditOS is uncertain. The Question / Requirement column is mandatory.</p></div><div class="mapping-badge" id="mappingConfidence">—</div></div><div id="mappingSheets" class="mapping-sheets"></div></section>
+  <section id="analysisProgress" class="analysis-progress hidden" aria-live="polite"><div class="spinner"></div><div><b id="analysisProgressTitle">Preparing analysis…</b><span id="analysisProgressDetail">Indexing SMS pages</span></div><strong id="analysisProgressPct">0%</strong></section>
+  <section id="results" class="results hidden"><div class="results-head"><div><p class="eyebrow">DOCUMENT GAP INTELLIGENCE</p><h2>SIRE ↔ SMS Coverage Review</h2><p id="resultsContext">Source-traceable document coverage only.</p></div><div class="result-actions"><button id="exportCsv" class="button button-secondary">Export CSV</button></div></div><div id="summaryStrip" class="summary-strip"></div><div class="results-toolbar"><label class="search-box"><span>Search</span><input id="resultSearch" type="search" placeholder="Question, reference, section…"></label><label>Coverage<select id="coverageFilter"><option value="all">All coverage</option><option>No Relevant Control Located</option><option>Possible Gap</option><option>Partial Coverage</option><option>Needs Auditor Review</option><option>Strong Coverage</option></select></label><label>Priority<select id="priorityFilter"><option value="all">All priorities</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></label><label>Decision<select id="decisionFilter"><option value="all">All decisions</option><option>Unreviewed</option><option>Needs Verification</option><option>Confirmed Gap</option><option>Dismissed</option></select></label></div><div class="result-layout"><div><div id="resultCount" class="result-count"></div><div id="resultList" class="result-list"></div></div><aside id="detailPanel" class="detail-panel"><div class="detail-empty"><div>↗</div><b>Select a SIRE item</b><span>Open any result to review exact SMS page matches and auditor actions.</span></div></aside></div></section>
+</main>
+<div id="toast" class="toast hidden" role="status"></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
