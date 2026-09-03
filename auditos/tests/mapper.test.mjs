@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mapSireItem, challengeMapping, rankResults } from '../core/mapper.js';
+import { mapSireItem, challengeMapping, rankResults, buildPageIndex } from '../core/mapper.js';
 
 const pages = [
   { pageNumber: 10, heading: 'Enclosed Space Entry', section: '7.4.2', text: 'Enclosed space entry requires a permit to work before entry. Atmosphere shall be tested for oxygen, flammable gas and toxic gas. A responsible officer shall supervise entry.' },
@@ -16,3 +16,4 @@ test('classifies incomplete relevant control as partial or possible gap instead 
 test('returns No Relevant Control Located when no candidate passes retrieval threshold',()=>{const result=mapSireItem(sire({section:'Ballast Water',question:'Is ballast water treatment operated and sampled in accordance with the ballast water management plan?',guidance:'Check BWTS records and D-2 sampling.'}),pages);assert.equal(result.classification,'No Relevant Control Located');assert.equal(result.matches.length,0);});
 test('challenge search can locate alternate terminology missed by initial query',()=>{const item=sire({section:'Enclosed Space',question:'Is enclosed space access controlled by gas testing, permit and rescue standby?',guidance:''});const initial=mapSireItem(item,[pages[4]],{synonymMode:'basic',minScore:36});assert.equal(initial.classification,'No Relevant Control Located');const challenged=challengeMapping(item,[pages[4]],initial);assert.notEqual(challenged.classification,'No Relevant Control Located');assert.equal(challenged.matches[0].pageNumber,70);assert.equal(challenged.challengeApplied,true);});
 test('risk-attention ranking brings high-attention gaps ahead of ordinary partial coverage',()=>{const ranked=rankResults([{reference:'1',section:'Administration',classification:'Partial Coverage',confidence:50,priority:'Medium'},{reference:'2',section:'Mooring Operations',classification:'Possible Gap',confidence:30,priority:'Critical'},{reference:'3',section:'Crew records',classification:'No Relevant Control Located',confidence:0,priority:'High'}]);assert.equal(ranked[0].reference,'2');});
+test('prebuilds reusable SMS page search index for large analyses',()=>{const indexed=buildPageIndex(pages);assert.ok(indexed[0]._searchIndex);assert.ok(indexed[0]._searchIndex.tokenSet instanceof Set);const result=mapSireItem(sire(),indexed);assert.equal(result.matches[0].pageNumber,10);});
