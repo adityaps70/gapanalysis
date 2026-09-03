@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { detectHeaderRow, textItemsToLines, detectPageMetadata, PARSER_ERRORS, parseSmsPdf, parseSireWorkbook } from '../browser/parsers.js';
+test('detects likely header row before SIRE data',()=>{const matrix=[['SIRE 2.0 Question Library'],['Generated 2026'],['Question No','Section','Question','Guidance','Rank'],['5.4.3','Enclosed Space','Are controls defined?','Review permits','C/O']];const result=detectHeaderRow(matrix);assert.equal(result.headerRowIndex,2);assert.deepEqual(result.headers.slice(0,3),['Question No','Section','Question']);});
+test('reconstructs PDF text lines from positioned items',()=>{const items=[{str:'7.4.2',transform:[1,0,0,1,10,700]},{str:'Enclosed Space Entry',transform:[1,0,0,1,60,700]},{str:'Permit to work is required.',transform:[1,0,0,1,10,680]}];const lines=textItemsToLines(items);assert.equal(lines[0],'7.4.2 Enclosed Space Entry');assert.equal(lines[1],'Permit to work is required.');});
+test('extracts page heading, section and revision metadata conservatively',()=>{const meta=detectPageMetadata('7.4.2 Enclosed Space Entry\nRevision 06\nEffective date 01 May 2026\nPermit to work is required.');assert.equal(meta.section,'7.4.2');assert.match(meta.heading,/Enclosed Space Entry/);assert.equal(meta.revision,'06');});
+test('exports stable parser error codes and browser parser functions',()=>{assert.equal(PARSER_ERRORS.IMAGE_ONLY,'IMAGE_ONLY_PDF');assert.equal(typeof parseSmsPdf,'function');assert.equal(typeof parseSireWorkbook,'function');});
